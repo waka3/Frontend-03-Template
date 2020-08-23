@@ -1,4 +1,5 @@
 const net = require('net')
+const parser = require('./parser')
 // request 请求对象
 class Request{
   constructor(options) {
@@ -33,7 +34,7 @@ class Request{
         })
       }
       connection.on('data', (data) => {
-        console.log(data.toString())
+        // console.log(data.toString())
         parser.receive(data.toString())
         if (parser.isFinished) {
           resolve(parser.response)
@@ -169,8 +170,8 @@ class TrunkedBodyParser{
         }
         this.current = this.WAITING_LENGTH_LINE_END
       } else {
-        this.length *= 16 // 对第一行16进制表示的内容总长度进行进位
-        this.length += parseInt(char, 16) // 使用parseInt将十六进制转为10进制
+        this.length *= 16
+        this.length += parseInt(char, 16) // 使用parseInt转为十六进制格式
       }
     } else if (this.current === this.WAITING_LENGTH_LINE_END) {
       if (char === '\n') {
@@ -199,7 +200,7 @@ void async function () {
   let request = new Request({
     method: "POST",  // http协议要求
     host: "127.0.0.1", // ip/tcp层要求
-    port: "8088", // ip/tcp层要求
+    port: "8090", // ip/tcp层要求
     path: "/", // http协议要求
     headers: {
       ["X-Foo2"]: "customed"
@@ -210,7 +211,8 @@ void async function () {
   })
   try {
     let response = await request.send()
-    console.log(response)
+    let dom = parser.parseHTML(response.body)
+    console.log(dom)
   } catch (err) {
     console.log(err)
   }

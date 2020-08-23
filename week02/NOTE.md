@@ -1,9 +1,9 @@
 学习笔记
 
+# 浏览器工作原理 - URL 从HTTP获取HTML
+
 ### 学习过程相关想法和思考
 - 视频小练习第一反应： 用indexOf方法查找字符串；
-- 疑问：为什么老师的视频里用if else的逻辑去写, 请问if else的写法是在模拟类似indexOf之类的方法吗？
-- 疑问: TrunkedBodyParser this.length *= 16处理的意义
 
 > tips: 实际操作总是能通过犯错学到更多因为没有犯错而被忽略的东西
 
