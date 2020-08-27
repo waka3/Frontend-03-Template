@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    :root {
+      --main-color: #000;
+    }
+
+    /* body {
+      background-color: var(--main-color);
+    } */
+
+    .wl{
+      background: burlywood;
+    }
+    p{
+      float: right;
+    }
+    span{
+      float: left;
+      width: 400px;
+      background: aqua;
+      display: table-cell;
+      display: table-caption;
+      display: block;
+      display: inline-block;
+    }
+    .wl::first-letter{
+      float: right;
+      background: yellowgreen;
+    }
+    .wl::first-line{
+      background: red;
+    }
+   
+  </style>
+</head>
+
+<body>
+  <div class="wl">
+    <p>第二行元素测试<br /> 为什么不是整行都变色</p>
+    <span>Hello World!！！！！</span>
+    <span>Hello World!</span>
+    <span>Hello World!！</span>
+    <span>Hello World!x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x'x</span>
+    <span>Hello World!vvvb</span>
+  </div>
+  <div id="id">
+    <div>
+      <span id="test" class="name"></span>
+    </div>
+  </div>
+  <!-- 编写一个 match 函数。
+  它接受两个参数，第一个参数是一个选择器字符串性质，第二个是一个 HTML 元素。
+  这个元素你可以认为它一定会在一棵 DOM 树里面。
+  通过选择器和 DOM元素来判断，当前的元素是否能够匹配到我们的选择器。
+  （不能使用任何内置的浏览器的函数，仅通过 DOM 的 parent 和 children 这些 API，来判断一个元素是否能够跟一个选择器相匹配。）
+  以下是一个调用的例子。 -->
+  <script>
+    function Match(selector, element) {
+      const selectors = selector.split(' ');
+      const children = element.children;
+      const bool = tagNameIsEqualSelector(children, selectors)
+      console.log(bool)
+      return bool;
+    }
+
+    function tagNameIsEqualSelector(children, selectors) {
+      // 继续处理选择器时已经不存在子节点
+      if (children.length < 1) {
+        return false;
+      }
+      for (let k = 0; k < children.length; k++) {
+        // 节点循环
+        const item = children[k];
+        // 选择器循环
+        for (let i = 0; i < selectors.length; i++) {
+          // 复合样式处理(只考虑id/class/tagName组合的情况)
+          const complex = selectors[i].match(/[a-zA-Z]+|([#.])[a-zA-Z]+/g);
+          let count = 0;
+          for (let j of complex) {
+            let attr = '';
+            let index = 1;
+            if (j.charAt(0) === '#') {
+              attr = 'id';
+            } else if (j.charAt(0) === '.') {
+              attr = 'className';
+            } else {
+              attr = 'localName';
+              index = 0;
+            }
+            if (item[attr] === j.slice(index)) {
+              count++;
+            } else {
+              // 最后一个不匹配 则匹配失败
+              if (i === selectors.length - 1) {
+                return false;
+              }
+              // 匹配失败, 下一层继续匹配
+              return tagNameIsEqualSelector(item.children, selectors);
+            }
+          }
+          if (count === complex.length) {
+            const next = i + 1;
+            if (next >= selectors.length) {
+              return true;
+            }
+            // 匹配成功, 下一层继续匹配
+            return tagNameIsEqualSelector(item.children, selectors.slice(next));
+          }
+        }
+      }
+    }
+
+    Match("div span", document.getElementById("id"));
+  </script>
+
+</body>
+
+</html>

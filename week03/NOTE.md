@@ -17,7 +17,7 @@
 2. 当dom构建在startTag时即判断css规则匹配
 
 ### css属性
-1. 优先级：[0, 0, 0, 0] - [inline-style, id, class, tag] 对应个数的样式 * 优先级 再累加
+1. 优先级：[0, 0, 0, 0] - [inline-style, id, class, tagName] 对应个数的样式 * 优先级 再累加
 
 ### 疑问
 - server.js response.send('')内不能包含中文字符，否则client运行报错，疑问：当前配置解析格式不支持中文字符造成错误吗？

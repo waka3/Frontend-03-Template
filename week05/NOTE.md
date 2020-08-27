@@ -1,1 +1,88 @@
 学习笔记
+
+### CSS 2.1 总体结构
+1. at-rules
+  - [x] [@media](https://www.w3.org/TR/css3-conditional/)
+  - [x] [@keyframes](https://www.w3.org/TR/css-animations-1/)
+  - [x] [@fontface](https://www.w3.org/TR/css-fonts-3/)
+
+  - [@import](https://www.w3.org/TR/css-cascade-4/)
+
+  - [@chatset](https://www.w3.org/TR/css-syntax-3/)
+  - [@page](https://www.w3.org/TR/css-page-3/)
+  - [@counter-style](https://www.w3.org/TR/css-counter-styles-3)
+  - [@supports](https://www.w3.org/TR/css3-conditional/) 检查某些功能是否被支持 本身是css3的新特性，目前不建议使用这个来检测新特性是否支持
+  - [@namespace](https://www.w3.org/TR/css-namespaces-3/)
+  - ... (已废弃/新出未确认)
+2. rules
+  - 选择器
+  - 声明
+    - key
+      - 属性
+      - 变量
+    - value
+      - 正常值
+      - 函数值
+
+#### CSS 规则
+1. Selector (selector-3)[https://www.w3.org/TR/selectors-3/] (selector-4)[https://www.w3.org/TR/selectors-4/]
+  - selector_group
+  - selector: > , space, + , - 
+  - simple_selector： type, *, ., #, :, ::, :not, []
+2. Declaration
+  - Key (Variables)[https://www.w3.org/TR/css-variables/]
+    - variables
+    - properties
+  - Value (Value)[https://www.w3.org/TR/css-values-4/]
+    - calc
+    - number
+    - length
+    - unit
+    - ...
+
+##### Selector
+1. 样式优先级
+  > 优先级：[0, 0, 0, 0] - [内联, id, 类选择器/属性选择器/伪类, tagName/伪元素]
+
+  > 设定数N
+
+  > 通配符选择器不影响优先级，:not()不影响优先级，但是not里包含的内容影响优先级
+
+2. 选择器语法
+    - 简单选择器
+      - \* 通配符选择器
+      - div 类型选择器(tagName) 
+      > 有命名空间概念: HTML、SVG、MathML, 重叠的命名用命名空间分隔符分开即可，如：svg | a
+      - .cls 类选择器
+      - #id id选择器
+      - [attr=value] 属性选择器
+      - :hover 伪类选择器
+      - ::before 伪元素选择器
+      > ::before / ::after 无中生有, 生成dom元素
+
+      > ::first-line / ::first-letter 在现有的dom元素上做处理
+    - 复杂选择器
+      - 空格 祖孙关系
+      - \> 直接上级(父)
+      - ~ 兄弟节点:  div ~ p 在div后的所有 p 兄弟节点 
+      - \+ 兄弟节点 div + p 紧跟在div后的 p 节点
+    - 复合选择器
+    > 有一定的顺序要求: 通配符/类型选择器最前, 伪类最后 如：div.test#id::before
+
+##### 思考：为什么 first-letter 可以设置 float 之类的，而 first-line 不行呢？
+1. ::first-line伪元素和 ::first-letter伪元素 都需要在 block-container box内部才有意义:
+  > ::first-letter 只在display属性值为block, inline-block, table-cell, list-item 或者 table-caption的元素上才起作用.
+
+  > ::first-line 只能在一个display值为block, inline-block, table-cell 或者 table-caption中有用.
+
+2. Note that the ::first-letter pseudo-element tags abut the content (i.e., the initial character), 
+  while the ::first-line pseudo-element start tag is inserted right after the start tag of the block element.
+  
+  ::first-letter伪元素标签紧挨着内容(即初始字符) 当 ::first-line伪元素开始标签被插入到块元素的开始标签之后。
+
+  > ::first-letter伪元素是相对于::first-line而言的
+
+3. float: 浮动，元素脱离正常文档流, 再设置浮动属性后, float会使display属性失效，且默认为块级属性(个人认为是默认inline-block属性)
+
+  > 总结： 如果 ::first-line伪元素 允许设置float属性, 则float会使::first-line 的 display属性发生改变， 造成 ::first-letter伪元素失效，
+  因此为了避免这个情况出现 ::first-line伪元素 不应支持first-line属性。 而::first-letter 自身的display属性变化并不会对其他造成影响。
