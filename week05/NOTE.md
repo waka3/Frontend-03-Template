@@ -70,19 +70,11 @@
     > 有一定的顺序要求: 通配符/类型选择器最前, 伪类最后 如：div.test#id::before
 
 ##### 思考：为什么 first-letter 可以设置 float 之类的，而 first-line 不行呢？
-1. ::first-line伪元素和 ::first-letter伪元素 都需要在 block-container box内部才有意义:
-  > ::first-letter 只在display属性值为block, inline-block, table-cell, list-item 或者 table-caption的元素上才起作用.
+1. The ::first-line pseudo-element describes the contents of the first formatted line of an element.
+  ::first-line 伪元素 描述元素的第一‘格式化行’的内容。
 
-  > ::first-line 只能在一个display值为block, inline-block, table-cell 或者 table-caption中有用.
+2. In CSS, the ::first-line pseudo-element can only have an effect when attached to a block-like container such as a block box, inline-block, table-caption, or table-cell. In such a case, it refers to the first formatted line of that container.
 
-2. Note that the ::first-letter pseudo-element tags abut the content (i.e., the initial character), 
-  while the ::first-line pseudo-element start tag is inserted right after the start tag of the block element.
+The first formatted line of an element may occur inside a block-level descendant in the same flow (i.e., a block-level descendant that is not out-of-flow due to floating or positioning). For example, the first line of the DIV in <DIV><P>This line...</P></DIV> is the first line of the P (assuming that both P and DIV are block-level).
   
-  ::first-letter伪元素标签紧挨着内容(即初始字符) 当 ::first-line伪元素开始标签被插入到块元素的开始标签之后。
-
-  > ::first-letter伪元素是相对于::first-line而言的
-
-3. float: 浮动，元素脱离正常文档流, 再设置浮动属性后, float会使display属性失效，且默认为块级属性(个人认为是默认inline-block属性)
-
-  > 总结： 如果 ::first-line伪元素 允许设置float属性, 则float会使::first-line 的 display属性发生改变， 造成 ::first-letter伪元素失效，
-  因此为了避免这个情况出现 ::first-line伪元素 不应支持first-line属性。 而::first-letter 自身的display属性变化并不会对其他造成影响。
+  ::first-line 描述的是第一格式化行， 且要求同继承元素处于同一个流中，浮动会使元素的流产生变化，因此不能设置float属性
