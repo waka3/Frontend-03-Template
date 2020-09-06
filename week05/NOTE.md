@@ -6,9 +6,9 @@
   - [x] [@keyframes](https://www.w3.org/TR/css-animations-1/)
   - [x] [@fontface](https://www.w3.org/TR/css-fonts-3/)
 
-  - [@import](https://www.w3.org/TR/css-cascade-4/)
+  - [@import](https://www.w3.org/TR/css-cascade-4/)r
 
-  - [@chatset](https://www.w3.org/TR/css-syntax-3/)
+  - [@charset](https://www.w3.org/TR/css-syntax-3/)
   - [@page](https://www.w3.org/TR/css-page-3/)
   - [@counter-style](https://www.w3.org/TR/css-counter-styles-3)
   - [@supports](https://www.w3.org/TR/css3-conditional/) 检查某些功能是否被支持 本身是css3的新特性，目前不建议使用这个来检测新特性是否支持
