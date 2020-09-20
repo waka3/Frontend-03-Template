@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    div {
+      width: 100px;
+      height: 100px;
+      background: #999;
+      border-radius: 50%;
+    }
+
+    .red.light {
+      background: red;
+    }
+
+    .yellow.light {
+      background: yellow;
+    }
+
+    .green.light {
+      background: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="green"></div>
+  <div class="yellow"></div>
+  <div class="red"></div>
+
+  <button id="next">next</button>
+  <script>
+    function init() {
+      const lights = document.getElementsByTagName('div');
+      for (let i = 0; i < 3; i++) {
+        lights[i].classList.remove('light');
+      }
+    }
+    // 绿灯
+    function green() {
+      init();
+      document.querySelector('.green').classList.add('light');
+    }
+    // 黄灯
+    function yellow() {
+      init();
+      document.querySelector('.yellow').classList.add('light');
+    }
+    // 红灯
+    function red() {
+      init();
+      document.querySelector('.red').classList.add('light');
+    }
+    function sleep(t) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, t);
+      })
+    }
+    function happen(element, eventName) {
+      return new Promise((resolve, reject) => {
+        element.addEventListener(eventName, resolve, { once: true })
+      })
+    }
+    // 自动循环交通灯
+    async function go() {
+      while (true) {
+        green();
+        await sleep(1000);
+        yellow()
+        await sleep(200);
+        red()
+        await sleep(500);
+      }
+    }
+    // 手动执行
+    async function goByNext() {
+      while (true) {
+        green();
+        await happen(document.getElementById('next'), 'click');
+        yellow()
+        await happen(document.getElementById('next'), 'click');
+        red()
+        await happen(document.getElementById('next'), 'click');
+      }
+    }
+  </script>
+</body>
+
+</html>
