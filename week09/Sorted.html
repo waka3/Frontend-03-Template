@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>启发式寻路</title>
+  <style>
+    .cell {
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: #c3c3c3;
+      border-bottom: 1px solid #fff;
+      border-right: 1px solid #fff;
+    }
+
+    #container {
+      width: 701px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <button onclick="localStorage['map'] = JSON.stringify(map)">保存</button>
+  <script>
+    let map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0);
+    const container = document.getElementById('container');
+    for (let i = 0; i < 100; i++) {
+      for (let j = 0; j < 100; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if (map[100 * i + j] === 1) {
+          cell.style.backgroundColor = "black";
+        }
+        cell.addEventListener('mouseover', () => {
+          if (mousedown) {
+            if (clear) {
+              cell.style.backgroundColor = "";  // 橡皮擦效果
+              map[100 * i + j] = 0;
+            } else {
+              cell.style.backgroundColor = "black";  // 绘图
+              map[100 * i + j] = 1;
+            }
+          }
+        })
+        container.appendChild(cell)
+      }
+    }
+    let clear = false;
+    let mousedown = false;
+    document.addEventListener('mousedown', (e) => {
+      mousedown = true;
+      clear = e.which === 3;
+    })
+    document.addEventListener('mouseup', () => mousedown = false);
+    document.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+
+    // 延迟
+    function sleep(t) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, t)
+      })
+    }
+    class Sorted {
+      constructor(data, compare) {
+        this.data = data.slice();
+        this.compare = compare || ((a, b) => a - b);
+      }
+      take() {
+        if (!this.data.length) return;
+        let min = this.data[0];
+        let minIndex = 0;
+        for (let i = 0; i < this.data.length; i++) { // 查找最小元素
+          if (this.compare(this.data[i], min) < 0) {
+            min = this.data[i];
+            minIndex = i;
+          }
+        }
+        // 数组最后一个元素赋值给数组的最小元素 （出现两个最后一个元素的值，因此可以删除一个）
+        this.data[minIndex] = this.data[this.data.length - 1];
+        this.data.pop(); // 删除最后一个元素
+        return min;
+      }
+      give(v) {
+        this.data.push(v);
+      }
+    }
+    /**
+     * 寻路 
+     * @params start 开始位置 [0,0]
+     * @params end 结束位置 [1,1]
+     */
+    async function findPath(map, start, end) {
+      console.time()
+      let table = Object.create(map);
+      const queue = new Sorted([start], (a, b) => distance(a) - distance(b)); // 队列
+      async function insert(x, y, prePoint) {
+        if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
+        if (map[y * 100 + x]) return;
+        await sleep(10);
+        container.children[y * 100 + x].style.backgroundColor = "lightgreen";
+        table[y * 100 + x] = prePoint;
+        map[y * 100 + x] = 2;
+        queue.give([x, y]);
+      }
+      function distance(point) {
+        return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2;
+      }
+      while (queue.data.length) {
+        let [x, y] = queue.take();
+        // console.log([x, y]);
+        if (x === end[0] && y === end[1]) { // 寻路点为结束位置时结束
+          let path = [];
+          while (x !== start[0] || y !== start[1]) { // 结束点开始往回标记路径，因此已开始位置作为结束逻辑
+            path.push(map[y * 100 + x]);
+            [x, y] = table[y * 100 + x];
+            await sleep(10);
+            container.children[y * 100 + x].style.backgroundColor = 'purple';
+          }
+          console.timeEnd();
+          return path;
+        }
+        // 上下左右
+        await insert(x, y - 1, [x, y]);
+        await insert(x, y + 1, [x, y]);
+        await insert(x - 1, y, [x, y]);
+        await insert(x + 1, y, [x, y]);
+        // 左上右上左下右下
+        await insert(x - 1, y - 1, [x, y]);
+        await insert(x + 1, y - 1, [x, y]);
+        await insert(x - 1, y + 1, [x, y]);
+        await insert(x + 1, y + 1, [x, y]);
+      }
+      return null;
+    }
+  </script>
+</body>
+
+</html>

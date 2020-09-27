@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>寻路</title>
+  <style>
+    .cell {
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: #c3c3c3;
+      border-bottom: 1px solid #fff;
+      border-right: 1px solid #fff;
+    }
+
+    #container {
+      width: 701px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <button onclick="localStorage['map'] = JSON.stringify(map)">保存</button>
+  <script>
+    let map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0);
+    const container = document.getElementById('container');
+    for (let i = 0; i < 100; i++) {
+      for (let j = 0; j < 100; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if (map[100 * i + j] === 1) {
+          cell.style.backgroundColor = "black";
+        }
+        cell.addEventListener('mouseover', () => {
+          if (mousedown) {
+            if (clear) {
+              cell.style.backgroundColor = "";  // 橡皮擦效果
+              map[100 * i + j] = 0;
+            } else {
+              cell.style.backgroundColor = "black";  // 绘图
+              map[100 * i + j] = 1;
+            }
+          }
+        })
+        container.appendChild(cell)
+      }
+    }
+    let clear = false;
+    let mousedown = false;
+    document.addEventListener('mousedown', (e) => {
+      mousedown = true;
+      clear = e.which === 3;
+    })
+    document.addEventListener('mouseup', () => mousedown = false)
+    document.addEventListener('contextmenu', (e) => { e.preventDefault(); })
+    /**
+     * 寻路 
+     * @params start 开始位置 [0,0]
+     * @params end 结束位置 [1,1]
+     */
+    function path(map, start, end) {
+      const queue = [start]; // 队列
+      function insert(x, y) {
+        if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
+        if (map[y * 100 + x]) return;
+        map[y * 100 + x] = 2;
+        queue.push([x, y]);
+      }
+      while (queue.length) {
+        let [x, y] = queue.shift();
+        console.log([x, y]);
+        if(x === end[0] && y === end[1]){ // 寻路点为结束位置时结束
+          return true;
+        }
+        insert(x, y - 1);
+        insert(x, y + 1);
+        insert(x - 1, y);
+        insert(x + 1, y);
+      }
+      return false;
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>五子棋</title>
+  <style>
+    .cell {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 1px solid #000;
+      vertical-align: middle;
+      background-color: goldenrod;
+      line-height: 55px;
+      font-size: 35px;
+      text-align: center;
+    }
+
+    .cell span {
+      display: inline-block;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+    }
+
+    .cell .white {
+      background: #fff;
+    }
+
+    .cell .black {
+      background: #000;
+    }
+  </style>
+</head>
+
+<body>
+  <div id='board'></div>
+  <script>
+    let pattern = [
+      2, 0, 0, 0, 0,
+      0, 1, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0,
+    ];
+    const chessAtlas = {
+      white: 1,
+      black: 2
+    }
+    let currentChess = 2;
+    // 棋盘展示
+    function show() {
+      const board = document.getElementById('board');
+      board.innerHTML = ""
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.innerHTML =
+            pattern[i * 5 + j] === chessAtlas.white ? '<span class="white"></span>' :
+              pattern[i * 5 + j] === chessAtlas.black ? '<span class="black"></span>' : "";
+          console.log(cell)
+          cell.addEventListener('click', () => userMove(j, i)); // i: y， j: x
+          board.appendChild(cell);
+        }
+        board.appendChild(document.createElement('br'));
+      }
+    }
+    // 玩家落子
+    function userMove(x, y) {
+      // console.log('被点击')
+      // console.log(x, y)
+      // console.log(y * 5 + x)
+      pattern[y * 5 + x] = currentChess;
+      if (check(pattern, currentChess)) {
+        alert(currentChess === chessAtlas.white ? '白子 is Winter' : '黑子 is Winter');
+      }
+      currentChess = 3 - currentChess; // 运算符对称小技巧
+      // console.log(bestChoice(pattern, currentChess));
+      show();
+      computerMove();
+    }
+    // AI落子
+    function computerMove() {
+      let choice = bestChoice(pattern, currentChess);
+      // point=[x,y]  i: y, j: x
+      if (choice.point) { // 存在结果走向点
+        const i = choice.point[1];
+        const j = choice.point[0];
+        pattern[i * 5 + j] = currentChess;
+      }
+      if (check(pattern, currentChess)) {
+        alert(currentChess === chessAtlas.white ? '白子 is Winter' : '黑子 is Winter');
+      }
+      currentChess = 3 - currentChess;
+      show();
+    }
+    // 输赢判断
+    function check(pattern, currentChess) {
+      // 五行
+      for (let i = 0; i < 5; i++) {
+        let win = true;
+        for (let j = 0; j < 5; j++) {
+          if (pattern[i * 5 + j] !== currentChess) {
+            win = false;
+          }
+        }
+        if (win) return true;
+      }
+      // 五列
+      for (let i = 0; i < 5; i++) {
+        let win = true;
+        for (let j = 0; j < 5; j++) {
+          if (pattern[j * 5 + i] !== currentChess) {
+            win = false;
+          }
+        }
+        if (win) return true;
+      }
+      // 两斜
+      {
+        let win = true;
+        for (let j = 0; j < 5; j++) {
+          if (pattern[j * 5 + j] !== currentChess) {
+            win = false;
+          }
+        }
+        if (win) return true;
+      }
+      {
+        let win = true;
+        for (let j = 0; j < 5; j++) {
+          if (pattern[j * 5 + (4 - j)] !== currentChess) {
+            win = false;
+          }
+        }
+        if (win) return true;
+      }
+      return false
+    }
+    function clone(pattern) {
+      return Object.create(pattern)
+    }
+    // 下一步即将要赢的提示（AI tip）
+    function willWin(pattern, currentChess) {
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          if (pattern[i * 5 + j]) continue;
+          // 当前格子为空，则填入下一步的棋子，check检查是否is win
+          let temp = clone(pattern);
+          temp[i * 5 + j] = currentChess;
+          if (check(temp, currentChess)) {
+            return [j, i] // x,y
+          }
+        }
+      }
+      return null
+    }
+    function bestChoice(pattern, currentChess) {
+      let p;
+      if (p = willWin(pattern, currentChess)) { // 下一步落子可赢
+        return {
+          point: p,
+          result: 1
+        }
+      }
+      let result = -2;
+      let point = null;
+      outer: for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+          if (pattern[i * 5 + j]) continue;
+          let temp = clone(pattern);
+          temp[i * 5 + j] = currentChess;
+          let r = bestChoice(temp, 3 - currentChess).result; // 对手的结果
+          // -1 0 1
+          if (-r > result) {  // r不为-2的情况 及存在执行结果
+            result = -r;
+            point = [j, i]; // x,y
+          }
+
+          if (result === 1) break outer;
+        }
+      }
+      return {
+        point: point,
+        result: point ? result : 0
+      }
+    }
+    show();
+  </script>
+</body>
+
+</html>

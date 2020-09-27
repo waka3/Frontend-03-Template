@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>地图编辑器</title>
+  <style>
+    .cell {
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: #c3c3c3;
+      border-bottom: 1px solid #fff;
+      border-right: 1px solid #fff;
+    }
+
+    #container {
+      width: 701px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <button onclick="localStorage['map'] = JSON.stringify(map)">保存</button>
+  <script>
+    let map = localStorage['map'] ? JSON.parse(localStorage['map']) : Array(10000).fill(0);
+    const container = document.getElementById('container');
+    for (let i = 0; i < 100; i++) {
+      for (let j = 0; j < 100; j++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if (map[100 * i + j] === 1) {
+          cell.style.backgroundColor = "black";
+        }
+        cell.addEventListener('mouseover', () => {
+          if (mousedown) {
+            if (clear) {
+              cell.style.backgroundColor = "";  // 橡皮擦效果
+              map[100 * i + j] = 0;
+            } else {
+              cell.style.backgroundColor = "black";  // 绘图
+              map[100 * i + j] = 1;
+            }
+          }
+        })
+        container.appendChild(cell)
+      }
+    }
+    let clear = false;
+    let mousedown = false;
+    document.addEventListener('mousedown', (e) => {
+      mousedown = true;
+      clear = e.which === 3;
+    })
+    document.addEventListener('mouseup', ()=> mousedown = false)
+    document.addEventListener('contextmenu', (e) => { e.preventDefault(); })
+  </script>
+</body>
+
+</html>
