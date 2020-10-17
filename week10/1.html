@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const regex = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\+)|(\-)|(\*)|(\/)/g;
+    const dictionary = ['Number', 'Whitespace', 'Line', '+', '-', '*', '/'];
+    function tokenize(expression) {
+      while (true) {
+        // [1]...[n] 括号中的分组捕获
+        // regex 7个()捕获组，所以[1] - [7]为正则匹配出的内容
+        // exec()的返回结果：
+        // [0]: 正则匹配到的字符串内容
+        // [1] - [n] 对应的是每个()组匹配的到的值
+        // [1] 1024跟regex的第一个括号的分组正则匹配
+        // ['匹配的全部字符串内容', 1024, undefined, undefined, undefined, undefined, undefined, undefined, {index: '索引'}, {input: '内容'}, {groups: undefined}]
+        const result = regex.exec(expression);
+        if(!result) break;
+        for (let i = 0; i < dictionary.length; i++) {
+          if (result[i + 1])
+            console.log(dictionary[i])
+        }
+        console.log(result);
+      }
+    }
+    tokenize("1024 + 10 * 25");
+  </script>
+</body>
+
+</html>

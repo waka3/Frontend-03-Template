@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const regex = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\+)|(\-)|(\*)|(\/)/g;
+    const dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/'];
+    function* tokenize(expression) {
+      let result = null;
+      let lastIndex = 0;
+      while (true) {
+        lastIndex = regex.lastIndex; // 匹配到字符串的最后一个字符的下一个位置
+        const result = regex.exec(expression);
+        
+        if(!result) break;
+
+        if(regex.lastIndex - lastIndex > result[0].length){ // 字符长度错误
+          throw new Error('错误');
+        }
+        let token = {
+          type: null,
+          value: null
+        }
+
+        if(!result) break;
+        for (let i = 0; i < dictionary.length; i++) {
+          if (result[i + 1])
+            token.type = dictionary[i];
+        }
+
+        token.value = result[0];
+        yield token;
+      }
+      yield {
+        type: "EOF" // 结束符
+      }
+    }
+    for(let token of tokenize("1024 + 10 * 25")){
+      console.log(token);
+    }
+  </script>
+</body>
+
+</html>

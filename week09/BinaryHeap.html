@@ -72,30 +72,35 @@
         this.compare = compare || ((a, b) => a - b);
       }
       take() { // 获取路径最小值
+        // debugger
         if (!this.data.length) return;
-        let min = this.data[0];
         let i = 0;
+        let min = this.data[i];
         while (i < this.data.length) {
           const left = i * 2 + 1;
           const right = i * 2 + 2;
-          if (left >= this.data.length) break; // 左节点超出长度，没有子节点
-          if (right >= this.data.length) { // 右节点超出长度，数组最后一位为当前节点左子节点
+          // break中断while循环
+          if (left >= this.data.length) break; // 左节点为最后节点
+          // if (right >= this.data.length) break; // 右节点为最后节点
+          if (right >= this.data.length) { // 右节点为最后节点
             this.data[i] = this.data[left];
             i = left;
             break;
           }
-          if (this.compare(this.data[left], this.data[right]) < 0) { // 右 < 左，左节点继续下沉
+          // 左右节点值小的节点上浮
+          if (this.compare(this.data[left], this.data[right]) < 0) { // 左 < 右
             this.data[i] = this.data[left];
             i = left;
-          } else { // 右 > 左，右节点继续下沉
+          } else { // 左 > 右
             this.data[i] = this.data[right];
             i = right;
           }
         }
+
         if (i < this.data.length - 1) {
-          this.insertAt(i, this.data.pop())
+          this.insertAt(i, this.data.pop())  // // i 不为最后一个节点，继续
         } else {
-          this.data.pop();
+          this.data.pop(); // 移除地图的最后一个节点
         }
         return min;
       }
@@ -123,34 +128,37 @@
      * @params end 结束位置 [1,1]
      */
     async function findPath(map, start, end) {
-      // console.time();
-      let table = Object.create(map);
+      console.time();
+      // let table = Object.create(map);
+      map = map.slice();
       const queue = new BinaryHeap([start], (a, b) => distance(a) - distance(b)); // 队列
+      container.children[start[1] * 100 + start[0]].style.backgroundColor = "green"; // 开始位置
+      container.children[end[1] * 100 + end[0]].style.backgroundColor = "red"; // 结束位置
 
       async function insert(x, y, prePoint) {
+        if (map[y * 100 + x] !== 0) return;
         if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
-        if (map[y * 100 + x]) return;
         // await sleep(10);
         container.children[y * 100 + x].style.backgroundColor = "lightgreen";
-        table[y * 100 + x] = prePoint;
-        map[y * 100 + x] = 2;
+        map[y * 100 + x] = prePoint;
+        // map[y * 100 + x] = 2;
         queue.insert([x, y]);
       }
       function distance(point) {
         return (point[0] - end[0]) ** 2 + (point[1] - end[1]) ** 2;
       }
-      while (queue.data.length) {
+      while (queue.length) {
         let [x, y] = queue.take();
-        console.log([x, y]);
+        // console.log([x, y]);
         if (x === end[0] && y === end[1]) { // 寻路点为结束位置时结束
           let path = [];
           while (x !== start[0] || y !== start[1]) { // 结束点开始往回标记路径，因此已开始位置作为结束逻辑
-            path.push(map[y * 100 + x]);
-            [x, y] = table[y * 100 + x];
+            path.push(x,y);
             // await sleep(10);
             container.children[y * 100 + x].style.backgroundColor = 'purple';
+            [x, y] = map[y * 100 + x];
           }
-          // console.timeEnd();
+          console.timeEnd();
           return path;
         }
         // 上下左右

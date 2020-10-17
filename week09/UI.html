@@ -72,14 +72,14 @@
      */
     async function findPath(map, start, end) {
       const queue = [start]; // 队列
-      let table = Object.create(map);
+      let table = Object.create(map); // 拷贝上一次的地图数据
       async function insert(x, y, prePoint) {
         if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
         if (map[y * 100 + x]) return;
         // await sleep(10);
         container.children[y * 100 + x].style.backgroundColor = "lightgreen";
-        table[y * 100 + x] = prePoint;
-        map[y * 100 + x] = 2;
+        map[y * 100 + x] = 2; // 标记为可通格子
+        table[y * 100 + x] = prePoint; // table的当前格子标记为原格子的位置
         queue.push([x, y]);
       }
       while (queue.length) {

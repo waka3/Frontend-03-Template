@@ -64,15 +64,15 @@
      * @params end 结束位置 [1,1]
      */
     function path(map, start, end) {
-      const queue = [start]; // 队列
+      const queue = [start]; // 寻路队列
       function insert(x, y) {
-        if (x < 0 || x >= 100 || y < 0 || y >= 100) return;
-        if (map[y * 100 + x]) return;
-        map[y * 100 + x] = 2;
-        queue.push([x, y]);
+        if (x < 0 || x >= 100 || y < 0 || y >= 100) return; // 碰壁
+        if (map[y * 100 + x]) return; // 非空
+        map[y * 100 + x] = 2; // 地图标记 2 可通过的路径格子 
+        queue.push([x, y]); // 插入队列
       }
       while (queue.length) {
-        let [x, y] = queue.shift();
+        let [x, y] = queue.shift(); // 移除队列的第一个元素，并获取位置
         console.log([x, y]);
         if(x === end[0] && y === end[1]){ // 寻路点为结束位置时结束
           return true;

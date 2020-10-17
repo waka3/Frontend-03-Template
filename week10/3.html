@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const regex = /([0-9\.]+)|([ \t]+)|([\r\n]+)|(\+)|(\-)|(\*)|(\/)/g; // \r\n：换行符 即LineTerminator
+    const dictionary = ['Number', 'Whitespace', 'LineTerminator', '+', '-', '*', '/'];
+    function* tokenize(expression) {
+      let result = null;
+      let lastIndex = 0;
+      while (true) {
+        lastIndex = regex.lastIndex; // 匹配到字符串的最后一个字符的下一个位置
+        const result = regex.exec(expression);
+        
+        if(!result) break;
+
+        if(regex.lastIndex - lastIndex > result[0].length){ // 字符长度错误
+          throw new Error('字符串格式错误');
+        }
+        let token = {
+          type: null,
+          value: null
+        }
+
+        if(!result) break;
+        for (let i = 0; i < dictionary.length; i++) {
+          if (result[i + 1])
+            token.type = dictionary[i];
+        }
+
+        token.value = result[0];
+        yield token;
+      }
+      yield {
+        type: "EOF" // 结束符
+      }
+    }
+    /**
+    * 测试用例
+    * 10 * 25 / 2
+    * 10 * 25 / / 2
+    * 10 * 25 s / 2
+    */
+    let source = []
+    for(let token of tokenize("10 * 25 / 2")){
+      if(token.type !== 'Whitespace' && token.type !== 'LineTerminator'){
+        source.push(token)
+      }
+    }
+    function Expression(){
+
+    }
+    function AdditiveExpression( ){}
+    /**
+    * 乘/除表达式
+    * 输入一： 数字
+    * 输入二： *   / 
+    */
+    function MultiplicativeExpression(source){
+      if(source[0].type === 'Number'){
+        const node = {
+          type: "MultiplicativeExpression",
+          children: [source[0]]
+        }
+        source[0] = node
+        return MultiplicativeExpression(source);
+
+      } else if(source[0].type === 'MultiplicativeExpression' && source[1] && source[1].type === '*'){
+        const node = {
+          type: "MultiplicativeExpression",
+          Operator: "*",
+          children: []
+        }
+        // source前三项移除，换成新的MultiplicativeExpression词法
+        if(source[2] && source[2].type !== 'Number'){
+          throw new Error('非法四则运算');
+        }
+        node.children.push(source.shift());
+        node.children.push(source.shift());
+        node.children.push(source.shift());
+        source.unshift(node)
+        return MultiplicativeExpression(source)
+
+      } else if(source[0].type === 'MultiplicativeExpression' && source[1] && source[1].type === '/'){
+        const node = {
+          type: "MultiplicativeExpression",
+          Operator: "/",
+          children: []
+        }
+        if(source[2] && source[2].type !== 'Number'){
+          throw new Error('非法四则运算');
+        }
+        node.children.push(source.shift());
+        node.children.push(source.shift());
+        node.children.push(source.shift());
+        source.unshift(node)
+        return MultiplicativeExpression(source)
+      } 
+      if(source[0].type === 'MultiplicativeExpression'){
+        return source[0]
+      }
+    }
+    console.log(MultiplicativeExpression(source));
+  </script>
+</body>
+
+</html>
