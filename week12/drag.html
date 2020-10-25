@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag</title>
+  <style>
+    #drag{
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      background-color: aquamarine;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 
+    文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字 文字
+  </div>
+  <div id="drag"></div>
+  <script>
+    const dragDom = document.getElementById('drag');
+    let baseX = 0;
+    let baseY = 0;
+    dragDom.addEventListener('mousedown', function(event){
+      let startX = event.clientX;
+      let startY = event.clientY;
+      console.log(startX, startY);
+      let up = (event) =>{
+        baseX = event.clientX - startX;
+        baseY = event.clientY - startY;
+        console.log(baseX, baseY);
+        document.removeEventListener('mouseover', move);
+        document.removeEventListener('mouseup', up);
+      }
+      let move = (event) =>{
+        // const moveX = baseX + event.clientX - startX;
+        // const moveY = baseY + event.clientY - startY;
+        // dragDom.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        let range = getNearest(event.clientX, event.clientY);
+        range.insertNode(dragDom);
+      }
+      // 在document上监听鼠标拖动的事件，避免拖拽过快鼠标移出拖动块造成的拖动块事件消失
+      document.addEventListener('mouseover', move);
+      document.addEventListener('mouseup', up);
+    })
+
+    const container = document.getElementById('container');
+    const ranges = [];
+    // 获取所有文本节点的边界
+    for (let i = 0; i < container.childNodes[0].textContent.length; i++) {
+      let range = document.createRange();
+      range.setStart(container.childNodes[0], i);
+      range.setEnd(container.childNodes[0], i);
+      // console.log(range.getBoundingClientRect());
+      ranges.push(range);
+    }
+
+    // 获取最近的点
+    function getNearest(x, y){
+      let min = Infinity;
+      let nearest = null;
+      for(let range of ranges){
+        let rect = range.getBoundingClientRect();
+        const distance = (rect.x - x) ** 2 + (rect.y - y) ** 2;
+        if(distance < min){
+          nearest = range;
+          min = distance;
+        }
+      }
+      return nearest;
+    }
+
+    document.addEventListener('selectstart', e => e.preventDefault());
+  </script>
+</body>
+</html>

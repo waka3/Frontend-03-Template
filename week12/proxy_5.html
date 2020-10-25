@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #color{
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <input id='r' type="range" min="0" max="255" />
+  <input id='g' type="range" min="0" max="255" />
+  <input id='b' type="range" min="0" max="255" />
+  <div id="color"></div>
+  <script>
+  /**
+   * new Map()
+   * 监听对象作为key
+   * value也为new Map对象
+   * value的 Map key为：监听对象的属性， value为属性绑定的事件
+   */ 
+  const callbacks = new Map();
+
+  // reactive 缓存
+  const reactivities = new Map();
+
+  let usedReactives = [];
+
+  let object = {
+    r: 1,
+    g: 1,
+    b: 1
+  }
+
+  let po = reactive(object);
+
+  // 给po添加监听时间
+  // 代替事件监听
+  effect(() => {
+    document.getElementById('r').value = po.r;
+  })
+  effect(() => {
+    document.getElementById('g').value = po.g;
+  })
+  effect(() => {
+    document.getElementById('b').value = po.b;
+  })
+  effect(() => {
+    document.getElementById('color').style.backgroundColor = `rgb(${po.r},${po.g},${po.b})`;
+  })
+
+  document.getElementById('r').addEventListener('input', event => {
+    po.r = event.target.value;
+  })
+  document.getElementById('g').addEventListener('input', event => {
+    po.g = event.target.value;
+  })
+  document.getElementById('b').addEventListener('input', event => {
+    po.b = event.target.value;
+  })
+
+
+  function effect(callback) {
+    usedReactives = [];
+    callback();
+    console.log('usedReactives', JSON.stringify(usedReactives));
+
+    for (let value of usedReactives) {
+      // 防止多次监听的重复添加
+      if (!callbacks.has(value[0]))  // 已存在对象重复添加
+        callbacks.set(value[0], new Map());
+      if (!callbacks.get(value[0]).has(value[1])) // 已存在对象的key重复添加
+        callbacks.get(value[0]).set(value[1], []);
+      // 监听的事件加入到回调函数数组内
+      callbacks.get(value[0]).get(value[1]).push(callback);
+    }
+  }
+
+  function reactive(object) {
+    if (reactivities.has(object)) { // 存在返回缓存的对象
+      return reactivities.get(object);
+    }
+    const proxy = new Proxy(object, {
+      set(obj, prop, val) {
+        obj[prop] = val;
+        if (callbacks.get(obj)) {
+          if (callbacks.get(obj).get(prop)) {
+            // 存在监听事件分别执行
+            for (let callback of callbacks.get(obj).get(prop)) {
+              callback();
+            }
+          }
+        }
+        return obj[prop];
+      },
+      get(obj, prop) {
+        // 注册usedReactives 了解哪些变量被使用
+        usedReactives.push([obj, prop]);
+        const _toString = Object.prototype.toString.call(obj[prop]).slice(8, -1);
+        if (_toString === 'Object') { // 属性为对象，则再包裹一层reactive
+          return reactive(obj[prop]);
+        }
+        return obj[prop];
+      },
+    })
+
+    reactivities.set(object, proxy);
+
+    return proxy;
+  }
+
+</script>
+</body>
+</html>
