@@ -97,3 +97,30 @@ React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
     createElement("span", null, "c"),
     createElement("span", null, "d"));
   ```
+2. **createElement()** 普通 HTML 标签解析并显示
+  ```JS
+  function createElement(tagName, attributes, ...children) {
+    const element = document.createElement(tagName);
+    for (let name in attributes) {
+      element.setAttribute(name, attributes[name]);
+    }
+    for (let child of children) {
+      if (typeof child === 'string') { // 文本节点解析
+        child = document.createTextNode(child);
+      }
+      element.appendChild(child);
+    }
+    return element;
+  }
+
+  const dom = <div id="a">
+    <span class="name">test</span>
+    <span>b</span>
+    <span>c</span>
+    <span>d</span>
+  </div>
+
+  document.body.appendChild(dom);
+  ```
+  > 踩坑：在head头引入了<script>内引入main.js, 执行编译后文件，报错：Uncaught TypeError: Cannot read property 'appendChild' of null
+  >> 把js放在了head中, 而document.body的是在body中的东西; html整体上是至上而下的流程，因此需要将js从head中放置到body中才可以
