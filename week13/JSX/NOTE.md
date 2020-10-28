@@ -215,3 +215,7 @@ React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
     }
   }
   ```
+
+5. 创建一个轮播组件 **class Carousel** 标签
+  - 提取公共代码作为框架 framework.js
+  - main.js 内 创建 Carousel 类 实现基础编译
