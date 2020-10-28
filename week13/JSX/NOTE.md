@@ -124,3 +124,41 @@ React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
   ```
   > 踩坑：在head头引入了<script>内引入main.js, 执行编译后文件，报错：Uncaught TypeError: Cannot read property 'appendChild' of null
   >> 把js放在了head中, 而document.body的是在body中的东西; html整体上是至上而下的流程，因此需要将js从head中放置到body中才可以
+
+3. **createElement(tagName, attribute, ...children)** 非 HTML 标签解析并显示
+  > 普通的 HTML 标签 tagName 为字符串， 非 HTML 标签时 tagName 为 function;
+  - 反向思路：用方法(mountTo)把节点添加到父节点下
+  ```js
+  createElement(){ // 仅修改 tagName 的处理
+    let element;
+    if (typeof tagName === 'string') {
+      element = document.createElement(tagName);
+    } else {
+      element = new tagName; // 非 HTML 标签的返回的的tagName 为 function
+    }
+    ...
+  }
+  class DIV{
+    constructor() {
+      this.root = document.createElement('div');
+    }
+    setAttribute(name, value) {
+      this.root.setAttribute(name, value);
+    }
+    appendChild(child) {
+      this.root.appendChild(child);
+    }
+    mountTo(parent) {
+      parent.appendChild(this.root);
+    }
+  }
+
+  const dom = <DIV id="a">
+    <span class="name">test</span>
+    <span>b</span>
+    <span>c</span>
+    <span>d</span>
+  </DIV>
+
+  dom.mountTo(document.body);
+  ```
