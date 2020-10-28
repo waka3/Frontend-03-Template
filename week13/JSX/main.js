@@ -1,5 +1,10 @@
-for (let i in [1, 2, 3]) {
-  console.log(i);
+function createElement() {
+  return; 
 }
 
-const a = <div classs="name"></div>
+const dom = <div id="a">
+  <span class="name">test</span>
+  <span>b</span>
+  <span>c</span>
+  <span>d</span>
+</div>

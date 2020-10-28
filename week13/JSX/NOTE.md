@@ -65,3 +65,35 @@ const a = <a href="//m.taobao.com">链接</a>
 编译后：
 React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
 ```
+
+#### JSX编译 React.createElement()方法模拟
+1. **@babel/plugin-transform-react-jsx** 编译内容查看：
+  - webpack.config.js 配置 pragma 修改 JSX 编译的函数; ["@babel/plugin-transform-react-jsx"](https://babeljs.io/docs/en/babel-plugin-transform-react-jsx#options)
+  ```JS
+  plugins: [["@babel/plugin-transform-react-jsx", {pragma: 'createElement'}]]
+  ```
+  - 测试: dist内新建.html文件，并引入main.js, 不存在createElement 使用报错
+  - main.js新增函数createElement()
+  - pragma 解析结构：createElement(tagName, attribute, ...children);
+  > children 为非文本节点时为：createElement(tagName, attribute, createElement(tagName, attribute, content));
+  ```JS
+  const a = <div id="a">
+    <span class="name">a</span>
+    <span>b</span>
+    <span>c</span>
+    <span>d</span>
+  </div>
+  // 解析结果
+  var a = createElement("div",
+    {
+      id: "a"
+    },
+    createElement("span",
+      {
+        "class": "name",
+      },
+      "a"),
+    createElement("span", null, "b"),
+    createElement("span", null, "c"),
+    createElement("span", null, "d"));
+  ```
