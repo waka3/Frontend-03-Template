@@ -2,7 +2,7 @@
 
 #### 初始环境搭建
 1. npm init 初始化package.json文件
-2. webpack-cli webpack babel-loader 安装
+2. webpack-cli webpack babel-loader(依赖与@babel/core @babel/preset-env)  安装
 3. 新建webpack.config.js 配置文件
 ```JS
 module.exports = {
@@ -219,3 +219,30 @@ React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
 5. 创建一个轮播组件 **class Carousel** 标签
   - 提取公共代码作为框架 framework.js
   - main.js 内 创建 Carousel 类 实现基础编译
+  - 新建 main.html 文件, 引入main.js 
+  - webpack-dev-server 安装(依赖于webpack-cli) 并运行, 方便开发环境调试. 
+  > 踩坑一：Error: Cannot find module ‘webpack-cli/bin/config-yargs’
+  >> 安装的 webpack-cli 默认为最新 ^4.0.1 执行 webpack-dev-server 无法通过, 报错排查为 webpack-cli 版本与 webpack-dev-server版本不兼容;
+  >> 直接安装教学视频版本 ^3.3.12 执行通过
+  - **解析传入 Carousel 的轮播图片data数组, 执行逻辑解析：**
+    - 使用 const swipper = <Carousel data={images} /> 编译执行为：
+    ```js
+    var swipper = (0,_framework_js__WEBPACK_IMPORTED_MODULE_0__.createElement)(Carousel, {
+      data: images
+    });
+    ```
+    - 执行 createElement 方法
+    - 调用了 new Carousel ;
+    - 执行 super() 调用 Component 跑入 constructor;
+    - 继续执行  createElement , Carousel 的 setAttribute 被执行 this.attributes 值设置成功
+    ```js
+    for (let name in attributes) {
+      element.setAttribute(name, attributes[name]);
+    }
+    ```
+    > tips: 由于 this.attributes 在此时才执行, 原 Component constructor内的 render 方法需要移除, 否则 render 先于 this.attributes 的值设置, 轮播图片资源获取失败;
+    >> `constructor(type) { this.root = this.render();}`
+    - createElement 执行完成
+    - 执行 swipper.mountTo(document.body);
+    - mountTo内调用 render 函数, 创建图片节点 完成返回
+    - Carousel 节点创建成功 图片正常展示;

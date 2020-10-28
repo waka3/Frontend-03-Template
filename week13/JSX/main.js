@@ -1,11 +1,24 @@
-import { createElement, Component } from './framework'
+import { createElement, Component } from './framework.js'
 
 class Carousel extends Component{
   constructor() {
     super();
+    this.attributes = Object.create(null);
+  }
+  setAttribute(name, value) {
+    this.attributes[name] = value;
   }
   render() {
-    return document.createElement('div');
+    this.root = document.createElement('div');
+    for (let item of this.attributes.data) {
+      const child = document.createElement('img');
+      child.src = item;
+      this.root.appendChild(child);
+    }
+    return this.root;
+  }
+  mountTo(parent) {
+    parent.appendChild(this.render());
   }
 }
 
@@ -16,6 +29,6 @@ const images = [
   'https://static001.geekbang.org/resource/image/73/e4/730ea9c393def7975deceb48b3eb6fe4.jpg'
 ]
 
-const swipper = <Carousel />;
+const swipper = <Carousel data={images} />;
 
 swipper.mountTo(document.body);
