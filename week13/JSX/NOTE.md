@@ -216,7 +216,7 @@ React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
   }
   ```
 
-5. 创建一个轮播组件 **class Carousel** 标签
+5. 创建一个可正常解析的轮播组件 **class Carousel** 标签
   - 提取公共代码作为框架 framework.js
   - main.js 内 创建 Carousel 类 实现基础编译
   - 新建 main.html 文件, 引入main.js 
@@ -246,3 +246,51 @@ React.createElement(\"a\", {\n  href: \"//m.taobao.com\"\n}
     - 执行 swipper.mountTo(document.body);
     - mountTo内调用 render 函数, 创建图片节点 完成返回
     - Carousel 节点创建成功 图片正常展示;
+
+6. 轮播组件 - 添加轮播逻辑
+  - 自动轮播
+  ```js
+    // 1.图片总个数 len
+    // 2.当前显示图片 index;
+    // 3.下一帧显示图片 next = index + 1 优化 next = (index + 1) % len;
+    // 0 - 1 / 1 - 2 / 2 - 3 
+    // 4.当前图片往左移 100%  -100 - index * 100%
+    // 5.next 图片往左移 100% -index * 100%
+    // 6.循环 next位置不在原位 下一次轮播会异常
+    // 7.补充4前的逻辑, 把 next 提前置于显示区域左侧 100 - nexts * 100
+  ```
+  - 鼠标滑动轮播
+  ```js
+  /**
+  // 单向左移
+  1. 鼠标按下并移动;
+  2. 计算鼠标移动到距离;
+  3. 判断图片在可视区域需要移动的距离：
+    - 鼠标移动：图片移动的距离便是自身位置和宽度需要偏移的大小 + 鼠标移动的距离;  position * dom总宽度 + 移动距离X
+    - 鼠标抬起：拖动的图片偏移到可视范围外, 拖动图片的 next 显示在可视区域; position * dom总宽度
+    position - Math.round(moveX / width); 四舍五入, 实现 position 的修改; 超过一半则移动图片，没超过不移动图片;
+  加上鼠标左右滑动的判断：
+  4. offset of [-1, 0, 1]: 左 中 右
+    result: [
+      [3,0,1],
+      [0,1,2],
+      [1,2,3],
+      [2,3,0],
+      [3,0,1]
+    ]
+    pos = current + offset;
+    pos: [
+      [-1,0,1],
+      [0,1,2],
+      [1,2,3],
+      [2,3,4],
+      [-1,0,1]
+    ]
+    pos = pos % len; 存在负数
+    pos = (pos + len) % len
+    对应位置的偏移量： -pos * width + offset * width, offset * width 左侧多减-100%, 右侧加100%; 中位即自身的偏移量;
+  */
+  ```
+
+> tips: 鼠标移动过程中, mouseup会出现失效, 可能是由于触发了拖拽事件和 鼠标移开了 dom 区域造成，
+> 因此需要加上 drag 和 mouseleave 的状态处理

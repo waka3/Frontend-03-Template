@@ -1,0 +1,15 @@
+.carousel{
+  width: 500px;
+  height: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.carousel>div{
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  /* 把图像图像扩展至最大尺寸，以使其宽度和高度完全适应内容区域 */
+  background-size: contain;
+  transition: ease .3s; 
+}
