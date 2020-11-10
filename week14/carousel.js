@@ -68,9 +68,8 @@ class Carousel extends Component{
       const nextChild = children[nextIndex];
       const currentChild = children[currentIndex];
 
-      ss
-      sssa
 
+      
       nextChild.style.transition = "none"; // 取消动画
       nextChild.style.transform = `translateX(${ 100 - nextIndex * 100}%)`; // 提前置于显示区域左侧
 
