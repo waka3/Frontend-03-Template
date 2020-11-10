@@ -1,7 +1,6 @@
 
 import { createElement } from './framework.js'
 import Carousel from './carousel';
-import { Timeline, Animation } from './animation';
 
 const images = [
   'https://static001.geekbang.org/resource/image/bb/21/bb38fb7c1073eaee1755f81131f11d21.jpg',
@@ -18,7 +17,3 @@ const config = {
 const swipper = <Carousel data={images} />;
 
 swipper.mountTo(document.body);
-
-let tl = new Timeline();
-tl.add(new Animation({}, 'a', 0, 100, 1000, null));
-tl.start();
