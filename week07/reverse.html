@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="dom">
+    <span>1</span>
+    <p>2</p>
+    <a>3</a>
+    <a>4</a>
+    <div>5</div>
+  </div>
+  <script>
+    const element = document.getElementById('dom');
+    function reverseChildren0(){
+      const children = Array.prototype.slice.call(element.children);
+      // for(let child of children){
+      //   element.removeChild(child);
+      // }
+      element.innerHTML = '';
+      children.reverse();
+      for(let child of children){
+        element.appendChild(child);
+      }
+    }
+    function reverseChildren1(){
+      let len = element.childNodes.length;
+      while(len-- > 0){
+        element.appendChild(element.childNodes[len]);
+      }
+    }
+    reverseChildren0();
+  </script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <!-- <div id="dom">123<span style="background-color: aquamarine;">456789</span>0123456789</div>
+  <script>
+    const range = new Range();
+    const element = document.getElementById('dom');
+    range.setStart(element.childNodes[1].childNodes[0], 3);
+    range.setEnd(element.childNodes[2], 3);
+  </script> -->
+  <div id="dom">
+    <span>1</span>
+    <p>2</p>
+    <a>3</a>
+    <a>4</a>
+    <div>5</div>
+  </div>
+  <script>
+    const element = document.getElementById('dom');
+    function reverseChildren(){
+      const range = new Range();
+      range.selectNodeContents(element);
+      const fragment = range.extractContents();
+      let len = fragment.childNodes.length;
+      while(len-- > 0){
+        fragment.appendChild(fragment.childNodes[len]);
+      }
+      element.appendChild(fragment);
+    }
+    reverseChildren();
+  </script>
+</body>
+</html>
