@@ -164,11 +164,11 @@ export class Recognizer {
     if (context.isPress) {
       this.dispatcher.dispatch('pressend', {});
     }
+    context.points = context.points.filter(point => Date.now() - point.t < 500);
     let d, v;
-    if (context.isPress || !context.points.length) {
+    if (!context.points.length) {
       v = 0;
     } else {
-      context.points = context.points.filter(point => Date.now() - point.t < 500);
       d = Math.sqrt((point.clientX - context.points[0].x) ** 2 + (point.clientY - context.points[0].y) ** 2);
       v = d / (Date.now() - context.points[0].t);
     }
