@@ -77,8 +77,8 @@ export class Timeline{
 
 /**
  * 属性动画
- * @{params} object 对象
- * @{params} property 属性
+ * @{params} object style对象
+ * @{params} property style属性
  * @{params} startValue 开始值
  * @{params} endValue 结束值
  * @{params} duration 持续时间
