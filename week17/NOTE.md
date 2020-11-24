@@ -59,6 +59,10 @@ install() {
   >> 解决：本地降低 webpack-cli 版本未解决，通过给 项目局部安装webpack-cli 运行成功
   >> 原因: 未知
 
+### webpack & babel
+1. babel 作为工具独立使用, 结合plugins使用
+  > npm install --save-dev @babel/core @babel/cli @babel/preset-env
+2. babel 与 webpack 搭配使用, 在 webpack 中 以 babel-loader 存在, webpack 不会默认读取 .babelrc文件, 预设的 presets 可在 loader 的 options选中中配置
 
 > tips: npm link 我们可以使用npm link命令，将 本地开发模块链接到对应的运行项目中去。
 > tips: [yeoman-generator](http://yeoman.io) 
