@@ -8,6 +8,37 @@
   > node.js 默认使用 commonJS 模块系统
   > node.js 启用 ES模块的方法：package.json -> type: 'module'
 
+#### mocha 配置 es 模块支持
+1. npm install @babel/core @babel/register @babel/preset-env
+2. .babelrc 配置 babel presets
+3. 执行mocha --require @babel/register
+
+#### mocha 增加单元测试 code coverage
+commonjs模块测试覆盖率支持
+1. npm install nyc
+2. 执行nyc mocha --require @babel/register
+  > Stmts(statements)
+
+mocha 配置 es 模块支持后的测试覆盖率支持 (低版本node需要)
+1. babel 插件拓展 npm install babel-plugin-istanbul
+2. nyc 插件拓展 npm install @istanbuljs/nyc-config-babel
+3. .babelrc 增加 plugins配置
+4. 增加 .nycrc 配置文件
+
+#### 使用 mocha 测试 toy-browser 的 html 的编译文件 parser.js
+1. 配置 mocha 单元测试 和 nyc code coverage
+2. 复制 parser.js 文件
+3. parser.spec.js 进行 parseHTML 测试
+4. 利用 vscode 实现 parser.js 文件的 debugger 测试
+    - 环境
+      - vscode 1.47.3
+      - Node: 12.17.1
+    - vscode lanuch.json 配置:
+      - program: 项目 mocha 运行程序的绝对路径
+      - cwd: 配置在此目录中启动要调试的程序 (***如果.vscode不在项目目录下，则需要指定具体的调试程序的路径,否则args等配置无效***)
+      - args (传递给程序 program 的参数, 可在process.argv拿到): mocha参数配置, 配置 babel 运行 支持 mocha 内 import export 使用
+    - .babelrc: 增加 sourceMaps: 'inline'
+
 #### [commonJS模块](http://nodejs.cn/api/modules.html#modules_modules_commonjs_modules)
 - exports/ module.exports 导出模块方法和变量; require() 导入exports导出的模块方法
 ```js
@@ -120,4 +151,25 @@ import { add } from './test.js';
 console.log(add);
 // [Function: add]
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

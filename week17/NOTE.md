@@ -66,5 +66,5 @@ install() {
 
 > tips: npm link 我们可以使用npm link命令，将 本地开发模块链接到对应的运行项目中去。
 > tips: [yeoman-generator](http://yeoman.io) 
->> 项目 package.json文件的 name 要求必须是 generator 开头才有效;
+>> 项目 package.json文件的 name 要求必须是 **generator 开头**才有效;
 >> Generator 内的方法会依次执行

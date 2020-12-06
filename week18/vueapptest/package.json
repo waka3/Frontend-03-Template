@@ -1,0 +1,32 @@
+{
+  "name": "toy-tool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/main.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "mocha --require @babel/register",
+    "coverage": "nyc mocha --require @babel/register"
+  },
+  "author": "wyj",
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/register": "^7.12.1",
+    "@istanbuljs/nyc-config-babel": "^3.0.0",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-istanbul": "^6.0.0",
+    "copy-webpack-plugin": "^6.3.2",
+    "css-loader": "^5.0.1",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "vue-loader": "^15.9.5",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^4.2.0"
+  },
+  "dependencies": {
+    "vue": "^2.6.12"
+  }
+}
